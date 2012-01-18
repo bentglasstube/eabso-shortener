@@ -49,6 +49,11 @@ get '/crx' => sub {
   redirect 'https://chrome.google.com/webstore/detail/cdjnlghjdbiambiakngkffonbaeoikcn';
 };
 
+any '/new.pl' => sub {
+  content_type 'application/json';
+  return to_json { error => 'update extension' };
+};
+
 get '/:token' => sub {
   if (exists $links{params->{token}}) {
     redirect $links{params->{token}};
