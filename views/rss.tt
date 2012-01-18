@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rss version="2.0">
+  <channel>
+    <title>eab.so links</title>
+    <link>http://eab.so/rss</link>
+    <description>links for #eatabrick</description>
+    [% foreach link in links %]
+      <item>
+        <title>[% link.title %]</title>
+        <link>http://eab.so/[% link.token %]</link>
+        <author>[% link.user %]</author>
+      </item>
+    [% end %]
+  </channel>
+</rss>
