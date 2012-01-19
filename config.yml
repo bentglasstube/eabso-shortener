@@ -1,5 +1,4 @@
 appname: "EABShortener"
-layout: "main"
 charset: "UTF-8"
 template: "template_toolkit"
 engines:

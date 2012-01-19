@@ -2,14 +2,7 @@
 <html>
   <head>
     <title>eab.so</title>
-    <style type="text/css">
-      body     { text-align: center; }
-      fieldset { border: none; }
-      #url     { width: 20em; }
-      #result  { margin: 0; }
-      #waiting { display: none; }
-      .error   { color: #800; font-style: oblique; }
-    </style>
+    <link rel="stylesheet" href="/style.css">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
     <script type="text/javascript">
       $(document).ready(function() {

@@ -42,7 +42,7 @@ post '/' => sub {
 
 get '/rss' => sub {
   content_type 'text/xml';
-  template 'rss', { links => [@links[0 .. 9]] };
+  template 'rss', { links => \@links };
 };
 
 get '/crx' => sub {
@@ -59,7 +59,7 @@ get '/:token' => sub {
     redirect $links{params->{token}};
   } else {
     status 'not_found';
-    return '';
+    template '404';
   }
 };
 
