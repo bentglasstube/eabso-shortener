@@ -1,6 +1,10 @@
 appname: "EABShortener"
 charset: "UTF-8"
 template: "template_toolkit"
+plugins:
+  Database:
+    driver: 'SQLite'
+    database: 'data.sqlite'
 engines:
   template_toolkit:
     encoding:  'utf8'
