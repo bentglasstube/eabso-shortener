@@ -6,9 +6,9 @@
     <description>links for #eatabrick</description>
     [% foreach link in links %]
       <item>
-        <title>[% link.title %]</title>
-        <link>http://eab.so/[% link.token %]</link>
-        <author>[% link.user %]</author>
+        <title>[% link.title | html %]</title>
+        <link>http://eab.so/[% link.token | uri %]</link>
+        <author>[% link.user | html %]</author>
       </item>
     [% end %]
   </channel>
