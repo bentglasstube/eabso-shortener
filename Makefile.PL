@@ -15,6 +15,8 @@ WriteMakefile(
         'Test::More' => 0,
         'YAML'       => 0,
         'Dancer'     => 1.3091,
+        'Dancer::Plugin::Database' => 0,
+        'Data::Validate::URI' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'EABShortener-*' },

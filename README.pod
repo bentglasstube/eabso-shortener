@@ -1,0 +1,15 @@
+=head1 NAME
+
+eabso-shortener - a web app for shortening links
+
+=head1 SEE ALSO
+
+eabso-extension L<https://github.com/bentglasstube/eabso-extension>
+
+=head1 AUTHOR
+
+Alan Berndt <alan@eatabrick.org>
+
+=head1 LICENSE
+
+See LICENSE for license details.
