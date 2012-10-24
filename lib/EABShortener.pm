@@ -4,8 +4,40 @@ use Dancer::Plugin::Database;
 
 our $VERSION = '0.1';
 
-use URI::Title 'title';
 use Data::Validate::URI 'is_uri';
+use LWP::UserAgent;
+
+my $ua = LWP::UserAgent->new(timeout => 5);
+my %ext_map = (
+  'image/jpeg' => '.jpg',
+  'image/png'  => '.png',
+  'image/gif'  => '.gif',
+  'text/plain' => '.txt',
+  'text/html'  => '.html',
+);
+
+sub get_extension {
+  my ($type) = @_;
+
+  return $ext_map{$type} if exists $ext_map{$type};
+  return '';
+}
+
+sub get_title {
+  my ($type, $body) = @_;
+
+  if (not defined $type) {
+    return 'Unknown link';
+  } elsif ($type eq 'text/html') {
+    if ($body =~ m|<title>(.*?)</title>|si) {
+      return $1;
+    } else {
+      return 'Untitled link';
+    }
+  } else {
+    return $type;
+  }
+}
 
 get '/' => sub {
   template 'index';
@@ -16,10 +48,21 @@ post '/' => sub {
   if (is_uri(params->{uri})) {
     my $token = join '', map $chars[int(rand(@chars))], 1 .. 6;
 
+    my $title;
+    my $resp = $ua->get(params->{uri});
+
+    if ($resp->is_error) {
+      $title = $resp->status_line;
+    } else {
+      (my $type = $resp->header('Content-Type')) =~ s/;.*$//;
+      $title = get_title($type, $resp->content);
+      $token .= get_extension($type);
+    }
+
     database->quick_insert(links => {
       token   => $token,
       uri     => params->{uri},
-      title   => title(params->{uri}) || 'Unknown link',
+      title   => $title,
       user    => params->{user} || 'Some asshole',
       created => time,
     });
