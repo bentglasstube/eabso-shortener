@@ -7,7 +7,7 @@ our $VERSION = '1.1';
 use Data::Validate::URI 'is_uri';
 use LWP::UserAgent;
 
-my $ua = LWP::UserAgent->new(timeout => 5);
+my $ua = LWP::UserAgent->new(timeout => 5, agent => config->{appname} . '/' . $VERSION);
 my %ext_map = (
   'image/jpeg' => '.jpg',
   'image/png'  => '.png',
