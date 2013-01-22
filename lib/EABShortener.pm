@@ -2,7 +2,7 @@ package EABShortener;
 use Dancer ':syntax';
 use Dancer::Plugin::Database;
 
-our $VERSION = '0.1';
+our $VERSION = '1.1';
 
 use Data::Validate::URI 'is_uri';
 use LWP::UserAgent;
