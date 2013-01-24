@@ -82,7 +82,7 @@ get '/rss' => sub {
     order_by => { desc => 'created' }, 
     limit => 25,
   });
-  template 'rss', { links => \@links };
+  template 'rss', { links => \@links }, { layout => undef };
 };
 
 get '/crx' => sub {

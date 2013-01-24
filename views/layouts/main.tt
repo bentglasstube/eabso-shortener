@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="share links with #eatabrick">
+    <meta name="author" content="Alan Berndt <alan@eatabrick.org>">
+
+    <title>eab.so</title>
+
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" href="/style.css">
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss">
+  </head>
+  <body>
+    <h1>eab.so</h1>
+    [% content %]
+  </body>
+</html>
+

@@ -1,6 +1,7 @@
 appname: "EABShortener"
 charset: "UTF-8"
 template: "template_toolkit"
+layout: "main"
 engines:
   template_toolkit:
     encoding:  'utf8'

@@ -1,44 +1,33 @@
-<!doctype html>
-<html>
-  <head>
-    <title>eab.so</title>
-    <link rel="stylesheet" href="/style.css">
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $('form').submit(function() {
-          $('#result').hide();
-          $('#waiting').show();
-          var uri = $('#url').attr('value');
+<form class="form-inline" method="post" action="/">
+  <fieldset>
+    <input type="text" id="url" name="uri">
+    <button class="btn" type="submit">share</button>
+  </fieldset>
+</form>
+<p id="result"><a href="/crx">install chrome extension</a></p>
+<img id="waiting" src="/loader.gif" alt="loading" />
 
-          $.post('/', { uri: uri }, function(data) {
-            if (data.error) {
-              $('#result').addClass('error');
-              $('#result').text(data.error);
-            } else {
-              $('#result').removeClass('error');
-              $('#result').html('<a href="' + data.result + '">' + data.result + '</a>');
-              $('#result a').focus();
-            }
-            $('#waiting').hide();
-            $('#result').show();
-          });
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('form').submit(function() {
+      $('#result').hide();
+      $('#waiting').show();
+      var uri = $('#url').attr('value');
 
-          return false;
-        });
+      $.post('/', { uri: uri }, function(data) {
+        if (data.error) {
+          $('#result').addClass('error');
+          $('#result').text(data.error);
+        } else {
+          $('#result').removeClass('error');
+          $('#result').html('<a href="' + data.result + '">' + data.result + '</a>');
+          $('#result a').focus();
+        }
+        $('#waiting').hide();
+        $('#result').show();
       });
-    </script>
-    <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss">
-  </head>
-  <body>
-    <h1>eab.so</h1>
-    <form method="post" action="/">
-      <fieldset>
-        <input id="url" name="uri">
-        <input type="submit" value="shorten">
-      </fieldset>
-    </form>
-    <p id="result"><a href="/crx">install chrome extension</a></p>
-    <img id="waiting" src="/loader.gif" alt="loading" />
-  </body>
-</html>
+
+      return false;
+    });
+  });
+</script>
