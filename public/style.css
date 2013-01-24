@@ -27,7 +27,7 @@ ul {
   list-style: none;
   display: inline-block;
   text-align: left;
-  width: 50%;
+  min-width: 50%;
 }
 
 li {
@@ -55,8 +55,9 @@ li .author {
 }
 
 li img.thumb {
-  float: left;
+  float: right;
   height: 4.5em;
-  margin-right: 0.5em;
+  width: 6em;
+  margin: 0 0.5em 0.5em 0;
 }
 
