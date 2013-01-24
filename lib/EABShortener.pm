@@ -39,8 +39,22 @@ sub get_title {
   }
 }
 
+use constant PAGE_SIZE => 25;
+
+sub get_links {
+  my ($where) = @_;
+
+  my $page = params->{p} || 1;
+  my $opts = {
+    order_by => { desc => 'created' },
+    limit    => join(',', ($page - 1) * PAGE_SIZE, PAGE_SIZE),
+  };
+
+  return [ database->quick_select('links', $where, $opts) ];
+}
+
 get '/' => sub {
-  template 'index';
+  template 'index', { links => get_links {} };
 };
 
 my @chars = split //, 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -80,7 +94,7 @@ get '/rss' => sub {
 
   my @links = database->quick_select(links => {}, { 
     order_by => { desc => 'created' }, 
-    limit => 25,
+    limit => PAGE_SIZE,
   });
   template 'rss', { links => \@links }, { layout => undef };
 };
@@ -94,15 +108,51 @@ any '/new.pl' => sub {
   return to_json { error => 'update extension' };
 };
 
+get '/history' => sub {
+  template 'links', { links => get_links {} };
+};
+
+get '/history/:year' => sub {
+  template 'links', { links => get_links {
+    created => { ge => 0 },
+    created => { le => 0 },
+  }};
+};
+
+get '/history/:year/:month' => sub {
+  template 'links', { links => get_links {
+    created => { ge => 0 },
+    created => { le => 0 },
+  }};
+};
+
+get '/search' => sub {
+  my $q = params->{query} || '';
+
+  template 'links', { links => get_links {
+    title => { like => "%$q%" },
+  }};
+};
+
+get '/by/:author' => sub {
+  template 'links', { links => get_links {
+    user => params->{author},
+  }};
+};
+
 get '/:token' => sub {
   my $link = database->quick_select(links => { token => params->{token} });
-
   if ($link) {
     redirect $link->{uri};
   } else {
     status 'not_found';
     template '404';
   }
+};
+
+any qr{.*} => sub {
+  status 'not_found';
+  template '404';
 };
 
 true;

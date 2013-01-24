@@ -31,3 +31,8 @@
     });
   });
 </script>
+
+[% if links.size > 0 %]
+  <h2>recent</h2>
+  [% include "links.tt" %]
+[% end %]
