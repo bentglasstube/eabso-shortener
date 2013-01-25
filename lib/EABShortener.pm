@@ -39,6 +39,14 @@ sub get_title {
   }
 }
 
+sub get_thumb {
+  my ($uri, $type, $body) = @_;
+
+  return $uri if $type =~ m{^image/};
+
+  return;
+}
+
 get '/' => sub {
   my $page = param('p') || 1;
   my $query = param('q');
@@ -70,23 +78,15 @@ post '/' => sub {
   if (is_uri($uri)) {
     my $token = join '', map $chars[int(rand(@chars))], 1 .. 6;
 
-    my $title;
     my $resp = $ua->get($uri);
 
     if ($resp->is_success) {
       (my $type = $resp->header('Content-Type')) =~ s/;.*$//;
 
-      if ($resp->is_error) {
-        $title = $resp->status_line;
-      } else {
-        $title = get_title($type, $resp->content);
-        $token .= get_extension($type);
-      }
+      $token .= get_extension($type);
 
-      my $thumb;
-      if ($type =~ m{^image/}i) {
-        $thumb = $uri;
-      }
+      my $title = get_title($type, $resp->content);
+      my $thumb = get_thumb($uri, $type, $resp->content);
 
       database->quick_insert(links => {
         token   => $token,
