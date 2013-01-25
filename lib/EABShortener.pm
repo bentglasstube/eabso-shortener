@@ -6,14 +6,23 @@ our $VERSION = '1.1';
 
 use Data::Validate::URI 'is_uri';
 use LWP::UserAgent;
+use HTML::TreeBuilder::Select;
 
 my $ua = LWP::UserAgent->new(timeout => 5, agent => config->{appname} . '/' . $VERSION);
+
 my %ext_map = (
   'image/jpeg' => '.jpg',
   'image/png'  => '.png',
   'image/gif'  => '.gif',
   'text/plain' => '.txt',
   'text/html'  => '.html',
+);
+
+my @thumb_selectors = (
+  'img#prodImage',
+  'img#main-image',
+  '#comic img',
+  'img.comic',
 );
 
 sub get_extension {
@@ -44,15 +53,19 @@ sub get_thumb {
 
   return $uri if $type =~ m{^image/};
 
-  if ($uri =~ /xkcd.com/) {
-    return ($body =~ m{Image URL \(for hotlinking/embedding\): (.*)})[0];
+  my $tree = HTML::TreeBuilder::Select->new_from_content($body);
+  my $thumb;
+
+  foreach (@thumb_selectors) {
+    if (my $img = $tree->select($_)) {
+      $thumb = $img->attr('src');
+      last;
+    }
   }
 
-  if ($uri =~ /amazon.com/) {
-    return ($body =~ m{<img.*?src="(.*?)".*?id="prodImage"})[0];
-  }
+  $tree->delete;
 
-  return;
+  return $thumb;
 }
 
 get '/' => sub {
