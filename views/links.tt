@@ -1,7 +1,7 @@
 [% use date %]
 
 [% if links.size > 0 %]
-  <ul>
+  <ul id="links">
     [% foreach link in links %]
       <li>
         [% if link.thumb %]
@@ -14,7 +14,7 @@
     [% end %]
   </ul>
 
-  <p><a href="?b=[% links.last.created %]">more</a></p>
+  <p><a id="more" href="?b=[% links.last.created %]">more</a></p>
 [% else %]
   <img src="/nope.gif" alt="nope">
 [% end %]
