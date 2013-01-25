@@ -39,15 +39,13 @@ sub get_title {
   }
 }
 
-use constant PAGE_SIZE => 25;
-
 sub get_links {
   my ($where) = @_;
 
   my $page = params->{p} || 1;
   my $opts = {
     order_by => { desc => 'created' },
-    limit    => join(',', ($page - 1) * PAGE_SIZE, PAGE_SIZE),
+    limit    => join(',', ($page - 1) * config->{page_size}, config->{page_size}),
   };
 
   return [ database->quick_select('links', $where, $opts) ];
@@ -100,7 +98,7 @@ get '/rss' => sub {
 
   my @links = database->quick_select(links => {}, { 
     order_by => { desc => 'created' }, 
-    limit => PAGE_SIZE,
+    limit => config->{page_size},
   });
   template 'rss', { links => \@links }, { layout => undef };
 };
