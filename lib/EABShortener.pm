@@ -23,6 +23,7 @@ my @thumb_selectors = (
   'img#main-image',
   '#comic img',
   'img.comic',
+  'table.infobox img',
 );
 
 sub get_extension {
