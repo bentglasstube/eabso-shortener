@@ -1,3 +1,5 @@
+[% use date %]
+
 [% if links.size > 0 %]
   <ul>
     [% foreach link in links %]
@@ -7,7 +9,7 @@
         [% end %]
         <p class="link"><a href="[% link.uri %]">[% link.title %]</a></p>
         <p class="author"><a href="/by/[% link.user | uri %]">[% link.user %]</a></p>
-        <p class="date">[% link.created %]</p>
+        <p class="date">[% date.format(link.created, '%Y-%m-%d %H:%M:%S') %]</p>
       </li>
     [% end %]
   </ul>
