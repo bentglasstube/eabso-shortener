@@ -59,11 +59,15 @@ my @chars = split //, 'abcdefghijklmnopqrstuvwxyz0123456789';
 post '/' => sub {
   content_type 'application/json';
 
-  if (is_uri(params->{uri})) {
+  my $uri = params->{uri};
+
+  $uri = "http://$uri" unless $uri =~ m{^[a-z]+://}i;
+
+  if (is_uri($uri)) {
     my $token = join '', map $chars[int(rand(@chars))], 1 .. 6;
 
     my $title;
-    my $resp = $ua->get(params->{uri});
+    my $resp = $ua->get($uri);
 
     if ($resp->is_success) {
       (my $type = $resp->header('Content-Type')) =~ s/;.*$//;
@@ -77,12 +81,12 @@ post '/' => sub {
 
       my $thumb;
       if ($type =~ m{^image/}i) {
-        $thumb = params->{uri};
+        $thumb = $uri;
       }
 
       database->quick_insert(links => {
         token   => $token,
-        uri     => params->{uri},
+        uri     => $uri,
         title   => $title,
         user    => params->{user} || 'Some asshole',
         created => time,
