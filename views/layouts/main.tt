@@ -14,9 +14,41 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 
     <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss">
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('form').submit(function() {
+          $('#waiting').show();
+          var uri = $('#url').val();
+          $.post('/', { uri: uri }, function(data) {
+            if (data.error) {
+              alert(data.error);
+              $('#url').val('');
+              $('#waiting').hide();
+            } else {
+              location.reload();
+            }
+          });
+          return false;
+        });
+      });
+    </script>
   </head>
   <body>
-    <h1>eab.so</h1>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="navbar-content">
+          <a class="brand" href="/">eab.so</a>
+          <form class="navbar-form pull-right" action="/" method="post">
+            <fieldset>
+              <input type="text" id="url" name="uri" placeholder="share">
+              <img src="/loader.gif" id="waiting" alt="loading">
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+
     [% content %]
   </body>
 </html>

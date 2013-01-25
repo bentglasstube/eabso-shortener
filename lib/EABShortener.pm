@@ -54,7 +54,7 @@ sub get_links {
 }
 
 get '/' => sub {
-  template 'index', { links => get_links {} };
+  template 'links', { links => get_links {} };
 };
 
 my @chars = split //, 'abcdefghijklmnopqrstuvwxyz0123456789';
