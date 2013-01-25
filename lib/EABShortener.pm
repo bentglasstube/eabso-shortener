@@ -84,14 +84,15 @@ sub get_thumb {
 }
 
 sub get_links {
-  my $after  = param 'a';
-  my $before = param 'b';
-  my $query  = param 'q';
-  my $user   = param 'u';
+  my $after  = param('a');
+  my $before = param('b');
+  my $query  = param('q');
+  my $user   = param('u');
+  my $number = param('n') || 25;
 
   my $opts = {
     order_by => { desc => 'created' },
-    limit    => config->{page_size},
+    limit    => $number,
   };
 
   my $where = {};
