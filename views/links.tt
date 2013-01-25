@@ -14,8 +14,7 @@
     [% end %]
   </ul>
 
-  [% page = params.p || 1 %]
-  <p><a href="?p=[% page + 1 %]">more</a></p>
+  <p><a href="?b=[% links.last.created %]">more</a></p>
 [% else %]
   <img src="/nope.gif" alt="nope">
 [% end %]

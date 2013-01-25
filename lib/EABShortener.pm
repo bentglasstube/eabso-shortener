@@ -84,19 +84,21 @@ sub get_thumb {
 }
 
 get '/' => sub {
-  my $page = param('p') || 1;
-  my $query = param('q');
-  my $author = param('a');
+  my $after  = param 'a';
+  my $before = param 'b';
+  my $query  = param 'q';
+  my $user   = param 'u';
 
   my $opts = {
     order_by => { desc => 'created' },
-    limit    => join(',', ($page - 1) * config->{page_size}, config->{page_size}),
+    limit    => config->{page_size},
   };
 
   my $where = {};
-
   $where->{title} = { like => "%$query%" } if $query;
-  $where->{user} = $author if $author;
+  $where->{user} = $user if $user;
+  $where->{created}{gt} = $after if $after;
+  $where->{created}{lt} = $before if $before;
 
   my $links = [ database->quick_select('links', $where, $opts) ];
 
