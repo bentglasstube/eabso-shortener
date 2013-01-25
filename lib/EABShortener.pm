@@ -48,6 +48,10 @@ sub get_thumb {
     return ($body =~ m{Image URL \(for hotlinking/embedding\): (.*)})[0];
   }
 
+  if ($uri =~ /amazon.com/) {
+    return ($body =~ m{<img.*?src="(.*?)".*?id="prodImage"})[0];
+  }
+
   return;
 }
 
