@@ -57,3 +57,10 @@ li img.thumb {
   display: none;
   margin: 0.45em 0 0 -2em;
 }
+
+.error {
+  display: none;
+  color: #d88;
+  font-style: oblique;
+  font-weight: bold;
+}
