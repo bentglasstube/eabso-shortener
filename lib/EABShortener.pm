@@ -44,6 +44,10 @@ sub get_thumb {
 
   return $uri if $type =~ m{^image/};
 
+  if ($uri =~ /xkcd.com/) {
+    return ($body =~ m{Image URL \(for hotlinking/embedding\): (.*)})[0];
+  }
+
   return;
 }
 
