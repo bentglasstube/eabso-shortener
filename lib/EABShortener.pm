@@ -57,38 +57,43 @@ get '/' => sub {
 
 my @chars = split //, 'abcdefghijklmnopqrstuvwxyz0123456789';
 post '/' => sub {
+  content_type 'application/json';
+
   if (is_uri(params->{uri})) {
     my $token = join '', map $chars[int(rand(@chars))], 1 .. 6;
 
     my $title;
     my $resp = $ua->get(params->{uri});
-    (my $type = $resp->header('Content-Type')) =~ s/;.*$//;
 
-    if ($resp->is_error) {
-      $title = $resp->status_line;
+    if ($resp->is_success) {
+      (my $type = $resp->header('Content-Type')) =~ s/;.*$//;
+
+      if ($resp->is_error) {
+        $title = $resp->status_line;
+      } else {
+        $title = get_title($type, $resp->content);
+        $token .= get_extension($type);
+      }
+
+      my $thumb;
+      if ($type =~ m{^image/}i) {
+        $thumb = params->{uri};
+      }
+
+      database->quick_insert(links => {
+        token   => $token,
+        uri     => params->{uri},
+        title   => $title,
+        user    => params->{user} || 'Some asshole',
+        created => time,
+        thumb   => $thumb,
+      });
+
+      return to_json { result => "http://eab.so/$token" };
     } else {
-      $title = get_title($type, $resp->content);
-      $token .= get_extension($type);
+      return to_json { error => $resp->status_line };
     }
-
-    my $thumb;
-    if ($type =~ m{^image/}i) {
-      $thumb = params->{uri};
-    }
-
-    database->quick_insert(links => {
-      token   => $token,
-      uri     => params->{uri},
-      title   => $title,
-      user    => params->{user} || 'Some asshole',
-      created => time,
-      thumb   => $thumb,
-    });
-
-    content_type 'application/json';
-    return to_json { result => "http://eab.so/$token" };
   } else {
-    content_type 'application/json';
     return to_json { error => 'invalid uri' };
   }
 };
