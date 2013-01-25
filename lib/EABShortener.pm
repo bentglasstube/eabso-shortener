@@ -7,6 +7,7 @@ our $VERSION = '1.1';
 use Data::Validate::URI 'is_uri';
 use LWP::UserAgent;
 use HTML::TreeBuilder::Select;
+use URI;
 
 my $ua = LWP::UserAgent->new(
   timeout    => 5,
@@ -79,7 +80,7 @@ sub get_thumb {
 
   $tree->delete;
 
-  return $thumb;
+  return URI->new_abs($thumb, $uri)->as_string;
 }
 
 get '/' => sub {
