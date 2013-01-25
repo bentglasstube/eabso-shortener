@@ -83,7 +83,7 @@ sub get_thumb {
   return URI->new_abs($thumb, $uri)->as_string;
 }
 
-get '/' => sub {
+sub get_links {
   my $after  = param 'a';
   my $before = param 'b';
   my $query  = param 'q';
@@ -100,10 +100,8 @@ get '/' => sub {
   $where->{created}{gt} = $after if $after;
   $where->{created}{lt} = $before if $before;
 
-  my $links = [ database->quick_select('links', $where, $opts) ];
-
-  template 'links', { links => $links };
-};
+  return [ database->quick_select('links', $where, $opts) ];
+}
 
 my @chars = split //, 'abcdefghijklmnopqrstuvwxyz0123456789';
 post '/' => sub {
@@ -144,14 +142,18 @@ post '/' => sub {
   }
 };
 
+get '/' => sub {
+  template 'links', { links => get_links };
+};
+
+get '/json' => sub {
+  content_type 'application/json';
+  to_json get_links;
+};
+
 get '/rss' => sub {
   content_type 'text/xml';
-
-  my @links = database->quick_select(links => {}, { 
-    order_by => { desc => 'created' }, 
-    limit => config->{page_size},
-  });
-  template 'rss', { links => \@links }, { layout => undef };
+  template 'rss', { links => get_links }, { layout => undef };
 };
 
 get '/crx' => sub {
