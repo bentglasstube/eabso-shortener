@@ -40,9 +40,9 @@ sub get_title {
 }
 
 get '/' => sub {
-  my $page = params->{p} || 1;
-  my $query = params->{q};
-  my $author = params->{a};
+  my $page = param('p') || 1;
+  my $query = param('q');
+  my $author = param('a');
 
   my $opts = {
     order_by => { desc => 'created' },
@@ -63,7 +63,7 @@ my @chars = split //, 'abcdefghijklmnopqrstuvwxyz0123456789';
 post '/' => sub {
   content_type 'application/json';
 
-  my $uri = params->{uri};
+  my $uri = param('uri');
 
   $uri = "http://$uri" unless $uri =~ m{^[a-z]+://}i;
 
@@ -92,7 +92,7 @@ post '/' => sub {
         token   => $token,
         uri     => $uri,
         title   => $title,
-        user    => params->{user} || 'Some asshole',
+        user    => param('user') || 'Some asshole',
         created => time,
         thumb   => $thumb,
       });
@@ -126,7 +126,7 @@ any '/new.pl' => sub {
 };
 
 get '/:token' => sub {
-  my $link = database->quick_select(links => { token => params->{token} });
+  my $link = database->quick_select(links => { token => param('token') });
   if ($link) {
     redirect $link->{uri};
   } else {
