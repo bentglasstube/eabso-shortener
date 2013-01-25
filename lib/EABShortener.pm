@@ -8,7 +8,11 @@ use Data::Validate::URI 'is_uri';
 use LWP::UserAgent;
 use HTML::TreeBuilder::Select;
 
-my $ua = LWP::UserAgent->new(timeout => 5, agent => config->{appname} . '/' . $VERSION);
+my $ua = LWP::UserAgent->new(
+  timeout    => 5,
+  parse_head => 0,
+  agent      => config->{appname} . '/' . $VERSION
+);
 
 my %ext_map = (
   'image/jpeg' => '.jpg',
@@ -19,11 +23,11 @@ my %ext_map = (
 );
 
 my @thumb_selectors = (
-  'img#prodImage',
-  'img#main-image',
-  '#comic img',
-  'img.comic',
-  'table.infobox img',
+  'img#prodImage',        # amazon single
+  'img#main-image',       # amazon multi
+  '#comic img',           # xkcd
+  'img.comic',            # qwantz
+  'table.infobox img',    # wikipedia
 );
 
 sub get_extension {
@@ -57,10 +61,17 @@ sub get_thumb {
   my $tree = HTML::TreeBuilder::Select->new_from_content($body);
   my $thumb;
 
-  foreach (@thumb_selectors) {
-    if (my $img = $tree->select($_)) {
-      $thumb = $img->attr('src');
-      last;
+  if (my $link = $tree->look_down(_tag => 'link', rel => 'image_src')) {
+    $thumb = $link->attr('href');
+  } elsif (my $meta = $tree->look_down(_tag => 'meta', name => 'twitter:image')) {
+    $thumb = $meta->attr('value');
+  } else {
+    foreach (@thumb_selectors) {
+      if (my $img = $tree->select($_)) {
+        warn "found image for $_";
+        $thumb = $img->attr('src');
+        last;
+      }
     }
   }
 
