@@ -64,13 +64,18 @@ post '/' => sub {
 
     my $title;
     my $resp = $ua->get(params->{uri});
+    (my $type = $resp->header('Content-Type')) =~ s/;.*$//;
 
     if ($resp->is_error) {
       $title = $resp->status_line;
     } else {
-      (my $type = $resp->header('Content-Type')) =~ s/;.*$//;
       $title = get_title($type, $resp->content);
       $token .= get_extension($type);
+    }
+
+    my $thumb;
+    if ($type =~ m{^image/}i) {
+      $thumb = params->{uri};
     }
 
     database->quick_insert(links => {
@@ -79,6 +84,7 @@ post '/' => sub {
       title   => $title,
       user    => params->{user} || 'Some asshole',
       created => time,
+      thumb   => $thumb,
     });
 
     content_type 'application/json';

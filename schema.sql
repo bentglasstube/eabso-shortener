@@ -9,3 +9,5 @@ create table if not exists links (
 create index if not exists created_desc on links (
   created desc
 );
+
+alter table links add column thumb text;
