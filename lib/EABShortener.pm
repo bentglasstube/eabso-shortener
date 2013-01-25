@@ -39,20 +39,24 @@ sub get_title {
   }
 }
 
-sub get_links {
-  my ($where) = @_;
-
+get '/' => sub {
   my $page = params->{p} || 1;
+  my $query = params->{q};
+  my $author = params->{a};
+
   my $opts = {
     order_by => { desc => 'created' },
     limit    => join(',', ($page - 1) * config->{page_size}, config->{page_size}),
   };
 
-  return [ database->quick_select('links', $where, $opts) ];
-}
+  my $where = {};
 
-get '/' => sub {
-  template 'links', { links => get_links {} };
+  $where->{title} = { like => "%$query%" } if $query;
+  $where->{user} = $author if $author;
+
+  my $links = [ database->quick_select('links', $where, $opts) ];
+
+  template 'links', { links => $links };
 };
 
 my @chars = split //, 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -119,38 +123,6 @@ get '/crx' => sub {
 any '/new.pl' => sub {
   content_type 'application/json';
   return to_json { error => 'update extension' };
-};
-
-get '/history' => sub {
-  template 'links', { links => get_links {} };
-};
-
-get '/history/:year' => sub {
-  template 'links', { links => get_links {
-    created => { ge => 0 },
-    created => { le => 0 },
-  }};
-};
-
-get '/history/:year/:month' => sub {
-  template 'links', { links => get_links {
-    created => { ge => 0 },
-    created => { le => 0 },
-  }};
-};
-
-get '/search' => sub {
-  my $q = params->{query} || '';
-
-  template 'links', { links => get_links {
-    title => { like => "%$q%" },
-  }};
-};
-
-get '/by/:author' => sub {
-  template 'links', { links => get_links {
-    user => params->{author},
-  }};
 };
 
 get '/:token' => sub {
