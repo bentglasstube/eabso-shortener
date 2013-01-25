@@ -65,6 +65,8 @@ sub get_thumb {
     $thumb = $link->attr('href');
   } elsif (my $meta = $tree->look_down(_tag => 'meta', name => 'twitter:image')) {
     $thumb = $meta->attr('value');
+  } elsif (my $meta = $tree->look_down(_tag => 'meta', property => 'og:image')) {
+    $thumb => $meta->attr('content');
   } else {
     foreach (@thumb_selectors) {
       if (my $img = $tree->select($_)) {
