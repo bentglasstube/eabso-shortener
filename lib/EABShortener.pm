@@ -61,18 +61,18 @@ sub get_thumb {
 
   my $tree = HTML::TreeBuilder::Select->new_from_content($body);
   my $thumb;
+  my $elem;
 
-  if (my $link = $tree->look_down(_tag => 'link', rel => 'image_src')) {
-    $thumb = $link->attr('href');
-  } elsif (my $meta = $tree->look_down(_tag => 'meta', name => 'twitter:image')) {
-    $thumb = $meta->attr('value');
-  } elsif (my $meta = $tree->look_down(_tag => 'meta', property => 'og:image')) {
-    $thumb => $meta->attr('content');
+  if ($elem = $tree->look_down(_tag => 'link', rel => 'image_src')) {
+    $thumb = $elem->attr('href');
+  } elsif ($elem = $tree->look_down(_tag => 'meta', name => 'twitter:image')) {
+    $thumb = $elem->attr('value');
+  } elsif ($elem = $tree->look_down(_tag => 'meta', property => 'og:image')) {
+    $thumb = $elem->attr('content');
   } else {
     foreach (@thumb_selectors) {
-      if (my $img = $tree->select($_)) {
-        warn "found image for $_";
-        $thumb = $img->attr('src');
+      if ($elem = $tree->select($_)) {
+        $thumb = $elem->attr('src');
         last;
       }
     }
