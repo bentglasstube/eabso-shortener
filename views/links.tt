@@ -15,6 +15,11 @@
   </ul>
 
   <p><a id="more" href="?b=[% links.last.created %]">more</a></p>
+
+  <script type="text/javascript">
+    var newest = [% links.first.created %];
+    var oldest = [% links.last.created %];
+  </script>
 [% else %]
   <img src="/nope.gif" alt="nope">
 [% end %]
