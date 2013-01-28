@@ -80,7 +80,8 @@ sub get_thumb {
 
   $tree->delete;
 
-  return URI->new_abs($thumb, $uri)->as_string;
+  return URI->new_abs($thumb, $uri)->as_string if $thumb;
+  return undef;
 }
 
 sub get_links {
