@@ -3,7 +3,7 @@ function makeLinkElem(link) {
 
   var time = new Date(link.created * 1000).toISOString().replace('T', ' ').replace(/\..*/, '');
 
-  var html = '<li>';
+  var html = '<li style="display: none;">';
   if (link.thumb) html += '<a href="' + link.uri + '"><img class="thumb" src="' + link.thumb + '" alt="thumbnail"></a>';
   html += '<p class="link"><a href="' + link.uri + '">' + link.title + '</a></p>';
   html += '<p class="author">' + link.user + '</p>';
@@ -34,20 +34,35 @@ $(document).ready(function() {
     e.preventDefault();
   });
 
-  $('#more').click(function(e) {
-    $.get('/json?b=' + oldest, function(data) {
-      if (data.length == 0) {
-        $('#more').parent().hide();
-      } else {
-        for (i in data) {
-          $('#links').append(makeLinkElem(data[i]));
-          oldest = data[i].created;
+  $(window).scroll(function() {
+    if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+      $.get('/json?b=' + oldest, function(data) {
+        if (data.length > 0) {
+          for (i in data) {
+            $('#links').append(makeLinkElem(data[i]));
+            oldest = data[i].created;
+          }
+          $('li').fadeIn();
         }
-
-        $('#more').attr('href', '?b=' + oldest);
-      }
-    });
-
-    e.preventDefault();
+      });
+    }
   });
+
+  (function refresh() {
+    $.ajax({
+      url: '/json?a=' + newest,
+      success: function(data) {
+        if (data.length > 0) {
+          for (i in data) {
+            $('#links').prepend(makeLinkElem(data[i]));
+          }
+          newest = data[0].created;
+          $('li').fadeIn();
+        }
+      },
+      complete: function() {
+        setTimeout(refresh, 5000);
+      },
+    });
+  })();
 });
