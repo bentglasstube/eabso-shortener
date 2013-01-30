@@ -13,21 +13,35 @@ function makeLinkElem(link) {
   return html;
 }
 
+function saveSettings() {
+  console.log('save settings');
+
+  $.cookie('settings-name', $('#settings-name').val());
+
+  $('#settings').modal('hide');
+}
+
 $(document).ready(function() {
-  $('form').submit(function(e) {
+  $('#settings-name').val($.cookie('settings-name'));
+
+  $('#share').submit(function(e) {
     $('#waiting').show();
     $('.error').hide();
 
-    var uri = $('#url').val();
+    var body = {
+      uri:  $('#url').val(),
+      user: $.cookie('settings-name'),
+    };
 
-    $.post('/', { uri: uri }, function(data) {
+    $.post('/', body, function(data) {
+      $('#url').val('');
+      $('#waiting').hide();
+
       if (data.error) {
-        $('#url').val('');
-        $('#waiting').hide();
         $('.error').show();
         $('.error').text(data.error);
       } else {
-        location.reload();
+        $('.error').hide();
       }
     });
 
@@ -61,8 +75,18 @@ $(document).ready(function() {
         }
       },
       complete: function() {
-        setTimeout(refresh, 5000);
+        setTimeout(refresh, 1000);
       },
     });
   })();
+
+  $('#settings form').submit(function(e) {
+    saveSettings();
+    e.preventDefault();
+  });
+
+  $('#save').click(function(e) {
+    saveSettings();
+    e.preventDefault();
+  });
 });

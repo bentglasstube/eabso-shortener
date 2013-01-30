@@ -53,9 +53,18 @@ li img.thumb {
   text-align: center;
 }
 
+.navbar .brand {
+  padding-right: 0;
+  margin-right: 0.5em;
+}
+
 #waiting {
   display: none;
   margin: 0.45em 0 0 -2em;
+}
+
+.navbar .btn {
+  margin-left: 0.5em;
 }
 
 .error {

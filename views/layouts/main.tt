@@ -9,10 +9,13 @@
     <title>eab.so</title>
 
     <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" href="/font-awesome.min.css">
     <link rel="stylesheet" href="/style.css">
     <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss">
 
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/bootstrap.min.js"></script>
     <script type="text/javascript" src="/site.js"></script>
   </head>
   <body>
@@ -20,13 +23,33 @@
       <div class="navbar-inner">
         <div class="navbar-content">
           <a class="brand" href="/">eab.so</a>
-          <form class="navbar-form pull-right" action="/" method="post">
+          <form id="share" class="navbar-form pull-left" action="/" method="post">
             <fieldset>
               <input type="text" id="url" name="uri" placeholder="share">
               <img src="/loader.gif" id="waiting" alt="loading">
             </fieldset>
           </form>
+          <a class="btn pull-left" href="#settings" data-toggle="modal"><i class="icon-cogs"></i></a>
         </div>
+      </div>
+    </div>
+
+    <div class="modal hide fade" id="settings">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria=hidden="true">&times;</button>
+        <h3>settings</h3>
+      </div>
+      <div class="modal-body">
+        <form>
+          <fieldset>
+            <label>name</label>
+            <input id="settings-name" type="text" placeholder="Some Asshole">
+          </fieldset>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <a href="#" data-dismiss="modal" class="btn">Close</a>
+        <a href="#" id="save" class="btn btn-primary">Save</a>
       </div>
     </div>
 
