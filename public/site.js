@@ -16,7 +16,7 @@ function makeLinkElem(link) {
 function saveSettings() {
   console.log('save settings');
 
-  $.cookie('settings-name', $('#settings-name').val());
+  $.cookie('settings-name', $('#settings-name').val(), { expires: 3650 });
 
   $('#settings').modal('hide');
 }
