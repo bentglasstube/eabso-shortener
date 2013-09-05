@@ -1,7 +1,6 @@
 package EABShortener;
 use Dancer ':syntax';
 use Dancer::Plugin::Database;
-use Dancer::Plugin::IRCNotice;
 
 our $VERSION = '1.1';
 
@@ -126,18 +125,15 @@ post '/' => sub {
 
       my $title = get_title($type, $resp->content);
       my $thumb = get_thumb($uri, $type, $resp->content);
-      my $author = param('user') || 'Some asshole';
 
       database->quick_insert(links => {
         token   => $token,
         uri     => $uri,
         title   => $title,
-        user    => $author,
+        user    => param('user') || 'Some asshole',
         created => time,
         thumb   => $thumb,
       });
-
-      notify("\cB$title\cB @ http://eab.so/$token ($author)");
 
       return to_json { result => "http://eab.so/$token" };
     } else {
