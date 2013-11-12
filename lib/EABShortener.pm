@@ -123,8 +123,8 @@ post '/' => sub {
 
       $token .= get_extension($type);
 
-      my $title = get_title($type, $resp->content);
-      my $thumb = get_thumb($uri, $type, $resp->content);
+      my $title = get_title($type, $resp->decoded_content);
+      my $thumb = get_thumb($uri, $type, $resp->decoded_content);
 
       database->quick_insert(links => {
         token   => $token,
