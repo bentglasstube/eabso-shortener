@@ -21,6 +21,10 @@ function saveSettings() {
   $('#settings').modal('hide');
 }
 
+function hasQueryString() {
+  return window.location.href.indexOf('?') != -1;
+}
+
 $(document).ready(function() {
   $('#settings-name').val($.cookie('settings-name'));
 
@@ -48,37 +52,39 @@ $(document).ready(function() {
     e.preventDefault();
   });
 
-  $(window).scroll(function() {
-    if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-      $.get('/json?b=' + oldest, function(data) {
-        if (data.length > 0) {
-          for (i in data) {
-            $('#links').append(makeLinkElem(data[i]));
-            oldest = data[i].created;
+  if (!hasQueryString()) {
+    $(window).scroll(function() {
+      if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+        $.get('/json?b=' + oldest, function(data) {
+          if (data.length > 0) {
+            for (i in data) {
+              $('#links').append(makeLinkElem(data[i]));
+              oldest = data[i].created;
+            }
+            $('li').fadeIn();
           }
-          $('li').fadeIn();
-        }
-      });
-    }
-  });
-
-  (function refresh() {
-    $.ajax({
-      url: '/json?a=' + newest,
-      success: function(data) {
-        if (data.length > 0) {
-          for (i in data) {
-            $('#links').prepend(makeLinkElem(data[i]));
-          }
-          newest = data[0].created;
-          $('li').fadeIn();
-        }
-      },
-      complete: function() {
-        setTimeout(refresh, 1000);
-      },
+        });
+      }
     });
-  })();
+
+    (function refresh() {
+      $.ajax({
+        url: '/json?a=' + newest,
+        success: function(data) {
+          if (data.length > 0) {
+            for (i in data) {
+              $('#links').prepend(makeLinkElem(data[i]));
+            }
+            newest = data[0].created;
+            $('li').fadeIn();
+          }
+        },
+        complete: function() {
+          setTimeout(refresh, 1000);
+        },
+      });
+    })();
+  }
 
   $('#settings form').submit(function(e) {
     saveSettings();
