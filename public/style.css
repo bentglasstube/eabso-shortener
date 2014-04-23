@@ -73,3 +73,7 @@ li img.thumb {
   font-style: oblique;
   font-weight: bold;
 }
+
+.navbar-form {
+  margin-left: 5px;
+}

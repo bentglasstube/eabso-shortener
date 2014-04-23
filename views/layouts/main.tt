@@ -25,8 +25,19 @@
           <a class="brand" href="/">eab.so</a>
           <form id="share" class="navbar-form pull-left" action="/" method="post">
             <fieldset>
-              <input type="text" id="url" name="uri" placeholder="share">
+              <div class="input-prepend">
+                <i class="add-on icon-share"></i>
+                <input type="text" id="url" name="uri" placeholder="share" autofocus>
+              </div>
               <img src="/loader.gif" id="waiting" alt="loading">
+            </fieldset>
+          </form>
+          <form id="search" class="navbar-form pull-left" action="/" method="get">
+            <fieldset>
+              <div class="input-prepend">
+                <i class="add-on icon-search"></i>
+                <input type="text" id="q" name="q" placeholder="search" autofocus>
+              </div>
             </fieldset>
           </form>
           <a class="btn pull-left" href="#settings" data-toggle="modal"><i class="icon-cogs"></i></a>
