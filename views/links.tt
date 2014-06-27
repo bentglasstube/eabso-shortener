@@ -7,7 +7,7 @@
         [% if link.thumb %]
           <a href="[% link.uri %]"><img class="thumb" src="[% link.thumb %]" alt="thumbnail"></a>
         [% end %]
-        <p class="link"><a href="[% link.uri %]">[% link.title %]</a></p>
+        <p class="link"><a href="/[% link.token %]">[% link.title %]</a></p>
         <p class="author">[% link.user %]</p>
         <p class="date">[% date.format(link.created, '%Y-%m-%d %H:%M:%S') %]</p>
       </li>

@@ -5,7 +5,7 @@ function makeLinkElem(link) {
 
   var html = '<li style="display: none;">';
   if (link.thumb) html += '<a href="' + link.uri + '"><img class="thumb" src="' + link.thumb + '" alt="thumbnail"></a>';
-  html += '<p class="link"><a href="' + link.uri + '">' + link.title + '</a></p>';
+  html += '<p class="link"><a href="/' + link.token + '">' + link.title + '</a></p>';
   html += '<p class="author">' + link.user + '</p>';
   html += '<p class="date">' + time + '</p>';
   html += '</li>';
