@@ -58,20 +58,15 @@ li img.thumb {
   margin-right: 0.5em;
 }
 
-#waiting {
-  display: none;
-  margin: 0.45em 0 0 -2em;
-}
-
 .navbar .btn {
   margin-left: 0.5em;
 }
 
-.error {
-  display: none;
-  color: #d88;
-  font-style: oblique;
-  font-weight: bold;
+.alert {
+  max-width: 80%;
+  margin: auto;
+  margin-bottom: 1em;
+  text-align: center;
 }
 
 .navbar-form {

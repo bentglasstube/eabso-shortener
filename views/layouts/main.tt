@@ -29,7 +29,6 @@
                 <i class="add-on icon-share"></i>
                 <input type="text" id="url" name="uri" placeholder="share" autofocus>
               </div>
-              <img src="/loader.gif" id="waiting" alt="loading">
             </fieldset>
           </form>
           <form id="search" class="navbar-form pull-left" action="/" method="get">
@@ -63,8 +62,6 @@
         <a href="#" id="save" class="btn btn-primary">Save</a>
       </div>
     </div>
-
-    <p class="error"></p>
 
     [% content %]
   </body>

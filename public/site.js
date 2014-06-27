@@ -29,9 +29,6 @@ $(document).ready(function() {
   $('#settings-name').val($.cookie('settings-name'));
 
   $('#share').submit(function(e) {
-    $('#waiting').show();
-    $('.error').hide();
-
     var body = {
       uri:  $('#url').val(),
       user: $.cookie('settings-name'),
@@ -39,14 +36,18 @@ $(document).ready(function() {
 
     $.post('/', body, function(data) {
       $('#url').val('');
-      $('#waiting').hide();
 
+      var message = $('<div class="alert"></div>');
       if (data.error) {
-        $('.error').show();
-        $('.error').text(data.error);
+        message.text(data.error);
+        message.addClass('alert-danger');
       } else {
-        $('.error').hide();
+        message.text('Shared as ' + data.result);
+        message.addClass('alert-success');
       }
+
+      $('.alert').remove();
+      $('#links').before(message);
     });
 
     e.preventDefault();
