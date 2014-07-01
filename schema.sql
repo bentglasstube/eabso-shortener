@@ -1,13 +1,12 @@
 create table if not exists links (
-  token   text    not null primary key,
-  uri     text    not null,
-  title   text    not null,
-  user    text    not null,
-  created integer not null
+  "token"   varchar(16)   not null primary key,
+  "uri"     varchar(1024) not null,
+  "title"   varchar(150)  not null,
+  "user"    varchar(50)   not null,
+  "created" integer       not null,
+  "thumb"   text
 );
 
-create index if not exists created_desc on links (
+create index created_desc on links (
   created desc
 );
-
-alter table links add column thumb text;

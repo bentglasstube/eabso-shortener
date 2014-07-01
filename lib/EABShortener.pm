@@ -1,4 +1,9 @@
 package EABShortener;
+
+use 5.010;
+use strict;
+use warnings;
+
 use Dancer ':syntax';
 use Dancer::Plugin::Database;
 
@@ -14,6 +19,27 @@ my $ua = LWP::UserAgent->new(
   parse_head => 0,
   agent      => config->{appname} . '/' . $VERSION
 );
+
+if ($ENV{DATABASE_URL}) {
+  debug "Database URL: $ENV{DATABASE_URL}";
+
+  my ($scheme, $user, $pass, $host, $port, $path) =
+    ($ENV{DATABASE_URL} =~ m|^(\w+)://(.+?):(.+?)@(.+?):(\d+?)/(\w+)$|);
+
+  my $driver = '';
+  if ($scheme eq 'postgres') {
+    $driver = 'Pg';
+  }
+
+  config->{plugins}{Database} = {
+    driver   => $driver,
+    database => $path,
+    host     => $host,
+    port     => $port,
+    username => $user,
+    password => $pass,
+  };
+}
 
 my %ext_map = (
   'image/jpeg' => '.jpg',
