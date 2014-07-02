@@ -7,5 +7,6 @@ requires 'Data::Validate::URI';
 requires 'HTML::TreeBuilder::Select';
 requires 'JSON';
 requires 'JSON::XS';
+requires 'LWP::Protocol::https';
 requires 'Template';
 requires 'YAML';
