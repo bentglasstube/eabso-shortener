@@ -1,6 +1,7 @@
 package EABShortener;
 
 use 5.010;
+use utf8;
 use strict;
 use warnings;
 
@@ -71,7 +72,14 @@ sub get_title {
     return 'Unknown link';
   } elsif ($type eq 'text/html') {
     if ($body =~ m|<title>(.*?)</title>|si) {
-      return $1;
+      my $title = $1;
+      $title =~ s/\s+/ /g;
+      $title =~ s/^\s+//;
+      $title =~ s/\s+$//;
+
+      $title = substr($title, 0, 99) . '…' if length($title) > 100;
+
+      return $title;
     } else {
       return 'Untitled link';
     }
@@ -156,7 +164,7 @@ post '/' => sub {
         token   => $token,
         uri     => $uri,
         title   => $title,
-        user    => param('user') || 'Some asshole',
+        user    => substr(param('user'), 0, 50) || 'Some asshole',
         created => time,
         thumb   => $thumb,
       });
