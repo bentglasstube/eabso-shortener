@@ -5,6 +5,7 @@ requires 'Dancer';
 requires 'Dancer::Plugin::Database';
 requires 'Data::Validate::URI';
 requires 'HTML::TreeBuilder::Select';
+requires 'JSON';
 requires 'JSON::XS';
 requires 'Template';
 requires 'YAML';
