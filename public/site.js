@@ -3,11 +3,10 @@ function pad(n, digits) {
   return n.length >= digits ? n : new Array(digits - n.length + 1).join('0') + n;
 }
 
-function makeLinkElem(link) {
-  console.log(link.created);
+function formatDate(epoch) {
+  var date = new Date(epoch * 1000);
 
-  var date = new Date(link.created * 1000);
-  var time = [
+  return [
     pad(date.getFullYear(), 4),
     pad(date.getMonth() + 1, 2),
     pad(date.getDate(), 2)
@@ -16,12 +15,14 @@ function makeLinkElem(link) {
     pad(date.getMinutes(), 2),
     pad(date.getSeconds(), 2)
   ].join(':');
+}
 
+function makeLinkElem(link) {
   var html = '<li style="display: none;">';
   if (link.thumb) html += '<a href="' + link.uri + '"><img class="thumb" src="' + link.thumb + '" alt="thumbnail"></a>';
   html += '<p class="link"><a href="/' + link.token + '">' + link.title + '</a></p>';
   html += '<p class="author">' + link.user + '</p>';
-  html += '<p class="date">' + time + '</p>';
+  html += '<p class="date">' + formatDate(link.created) + '</p>';
   html += '</li>';
 
   return html;
@@ -37,6 +38,16 @@ function saveSettings() {
 
 function hasQueryString() {
   return window.location.href.indexOf('?') != -1;
+}
+
+function localizeDates() {
+  $('.date-ts').each(function() {
+    var elem = $(this);
+
+    elem.text(formatDate(elem.text()));
+    elem.removeClass('date-ts');
+    elem.addClass('date');
+  });
 }
 
 $(document).ready(function() {
