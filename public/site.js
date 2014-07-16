@@ -1,7 +1,21 @@
+function pad(n, digits) {
+  n = n + '';
+  return n.length >= digits ? n : new Array(digits - n.length + 1).join('0') + n;
+}
+
 function makeLinkElem(link) {
   console.log(link.created);
 
-  var time = new Date(link.created * 1000).toISOString().replace('T', ' ').replace(/\..*/, '');
+  var date = new Date(link.created * 1000);
+  var time = [
+    pad(date.getFullYear(), 4),
+    pad(date.getMonth() + 1, 2),
+    pad(date.getDate(), 2)
+  ].join('-') + ' ' + [
+    pad(date.getHours(), 2),
+    pad(date.getMinutes(), 2),
+    pad(date.getSeconds(), 2)
+  ].join(':');
 
   var html = '<li style="display: none;">';
   if (link.thumb) html += '<a href="' + link.uri + '"><img class="thumb" src="' + link.thumb + '" alt="thumbnail"></a>';
