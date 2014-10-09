@@ -4,9 +4,11 @@ use 5.010;
 use utf8;
 use strict;
 use warnings;
+use threads;
 
 use Dancer ':syntax';
 use Dancer::Plugin::Database;
+use Dancer::Plugin::IRCNotice;
 
 our $VERSION = '1.1';
 
@@ -131,10 +133,10 @@ sub get_links {
   };
 
   my $where = {};
-  $where->{title} = { like => "%$query%" } if $query;
-  $where->{user} = $user if $user;
-  $where->{created}{gt} = $after if $after;
-  $where->{created}{lt} = $before if $before;
+  $where->{title}       = { like => "%$query%" } if $query;
+  $where->{user}        = $user                  if $user;
+  $where->{created}{gt} = $after                 if $after;
+  $where->{created}{lt} = $before                if $before;
 
   return [ database->quick_select('links', $where, $opts) ];
 }
@@ -148,7 +150,7 @@ post '/' => sub {
   $uri = "http://$uri" unless $uri =~ m{^[a-z]+://}i;
 
   if (is_uri($uri)) {
-    my $token = join '', map $chars[int(rand(@chars))], 1 .. 6;
+    my $token = join '', map $chars[ int(rand(@chars)) ], 1 .. 6;
 
     my $resp = $ua->get($uri);
 
@@ -159,15 +161,22 @@ post '/' => sub {
 
       my $title = get_title($type, $resp->decoded_content);
       my $thumb = get_thumb($uri, $type, $resp->decoded_content);
+      my $author = substr(param('user'), 0, 50) || 'Some asshole';
 
-      database->quick_insert(links => {
-        token   => $token,
-        uri     => $uri,
-        title   => $title,
-        user    => substr(param('user'), 0, 50) || 'Some asshole',
-        created => time,
-        thumb   => $thumb,
-      });
+      database->quick_insert(
+        links => {
+          token   => $token,
+          uri     => $uri,
+          title   => $title,
+          user    => $author,
+          created => time,
+          thumb   => $thumb,
+        });
+
+      async {
+        notify("$title @ http://eab.so/$token ($author)");
+      }
+      ->detach();
 
       return to_json { result => "http://eab.so/$token" };
     } else {
