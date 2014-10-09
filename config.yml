@@ -14,3 +14,4 @@ plugins:
     nick: 'eabso'
     name: 'Dancer::Plugin::IRCNotice'
     channel: '#eatabrick'
+    type: 'message'
