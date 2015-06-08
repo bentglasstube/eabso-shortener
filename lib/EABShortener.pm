@@ -178,6 +178,22 @@ post '/' => sub {
       }
       ->detach();
 
+      async {
+        if (defined $ENV{SLACK_HOOK_URL}) {
+          $ua->post(
+            $ENV{SLACK_HOOK_URL}, {
+              payload => qq{
+              {
+                "text": "$title <http://eab.so/$token> ($author)",
+                "username": "eab.so",
+                "icon_emoji": ":bricky:"
+              }
+            },
+            });
+        }
+      }
+      ->detach();
+
       return to_json { result => "http://eab.so/$token" };
     } else {
       return to_json { error => $resp->status_line };
