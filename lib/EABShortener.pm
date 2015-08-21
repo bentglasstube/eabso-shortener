@@ -8,7 +8,6 @@ use threads;
 
 use Dancer ':syntax';
 use Dancer::Plugin::Database;
-use Dancer::Plugin::IRCNotice;
 
 our $VERSION = '1.1';
 
@@ -172,11 +171,6 @@ post '/' => sub {
           created => time,
           thumb   => $thumb,
         });
-
-      async {
-        notify("$title @ http://eab.so/$token ($author)");
-      }
-      ->detach();
 
       async {
         if (defined $ENV{SLACK_HOOK_URL}) {
